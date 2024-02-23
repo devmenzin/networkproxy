@@ -1,0 +1,20 @@
+# Configurações do Registro
+$regContent = @"
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\NetworkProxy]
+"V2CSPNodePath"="./Vendor/MSFT/NetworkProxy"
+"WAPNodeProcessor"="{FB11047A-4051-4d1d-9DCA-C80C5DF98D70}"
+"@
+
+# Caminho do arquivo .reg temporário
+$regFilePath = [System.IO.Path]::Combine($env:TEMP, 'network_proxy_settings.reg')
+
+# Salva o conteúdo no arquivo .reg
+$regContent | Set-Content -Path $regFilePath -Force
+
+# Executa o arquivo .reg usando regedit.exe
+Start-Process "regedit.exe" -ArgumentList "/s `"$regFilePath`"" -Wait
+
+# Remove o arquivo .reg temporário após a execução
+Remove-Item -Path $regFilePath -Force
